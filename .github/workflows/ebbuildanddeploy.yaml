@@ -23,7 +23,7 @@ jobs:
       - name: Build and push Backend Docker image
         uses: docker/build-push-action@v3
         with:
-          context: ./frontend
+          context: ./backend
           push: true
           dockerfile: ./Dockerfile
           tags: webrokeltd993/backend:latest
