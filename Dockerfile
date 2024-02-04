@@ -17,7 +17,7 @@ RUN gradle build || return 0
 COPY . .
 RUN gradle clean build
 
-FROM --platform=linux/x86_64 amazoncorretto:17
+FROM --platform=linux/x86_64 amazoncorretto:21
 ARG BUILD_HOME
 ENV APP_HOME=$BUILD_HOME
 ENV ARTIFACT_NAME=backend-0.0.1-SNAPSHOT.jar
