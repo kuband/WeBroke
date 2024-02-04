@@ -1,0 +1,4 @@
+rootProject.name = 'we.broke'
+include 'backend'
+include 'frontend'
+

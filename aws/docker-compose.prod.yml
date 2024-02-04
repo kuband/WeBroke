@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  frontend:
+    image: webrokeltd993/frontend:latest
+    restart: always
+    ports:
+      - "4200:4200"
+
+  backend:
+    image: webrokeltd993/backend:latest
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://prettyestimatedb.cng2kucce7ra.eu-west-2.rds.amazonaws.com:5432/prettyestimate
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: v06pDufcA0eCiwE
