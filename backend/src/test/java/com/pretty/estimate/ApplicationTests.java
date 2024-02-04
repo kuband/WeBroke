@@ -1,4 +1,4 @@
-package com.we.broke;
+package com.backend;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
