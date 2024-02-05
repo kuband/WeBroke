@@ -1,4 +1,4 @@
-name: Build on DockerHub and Deploy to AWS ElasticBean
+name: Build on DockerHub
 on:
   workflow_dispatch
 # uncomment when ready for CICD
