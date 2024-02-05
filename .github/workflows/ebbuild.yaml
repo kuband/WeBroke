@@ -1,0 +1,38 @@
+name: Build on DockerHub and Deploy to AWS ElasticBean
+on:
+  workflow_dispatch
+# uncomment when ready for CICD
+#  push:
+#    branches:
+#      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          platforms: linux/x86_64
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push Backend Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./backend
+          push: true
+          dockerfile: ./Dockerfile
+          tags: webrokeltd993/backend:latest
+          platforms: linux/x86_64
+      - name: Build and push FrontEnd Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: ./frontend
+          push: true
+          dockerfile: ./Dockerfile
+          tags: webrokeltd993/frontend:latest
+          platforms: linux/x86_64
