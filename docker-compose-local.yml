@@ -17,10 +17,6 @@ services:
       dockerfile: Dockerfile
       context: backend
     restart: always
-    ports:
-      - "8080:8080"
-    expose:
-      - "8080"
     depends_on:
       - postgres
     environment:
@@ -34,9 +30,7 @@ services:
       context: frontend
     restart: always
     ports:
-      - "4200:4200"
-    expose:
-      - "4200"
+      - "80:80"
 
 volumes:
   postgres-data:

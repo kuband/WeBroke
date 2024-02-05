@@ -4,7 +4,7 @@ services:
     image: webrokeltd993/frontend:latest
     restart: always
     ports:
-      - "4200:4200"
+      - "80:80"
 
   backend:
     image: webrokeltd993/backend:latest
