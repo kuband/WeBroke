@@ -60,8 +60,8 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: pretty-estimate-new
-          environment_name: Pretty-estimate-new-env
+          application_name: we-broke
+          environment_name: We-broke-env
           version_label: "docker-app-${{ steps.format-time.outputs.replaced }}"
           region: eu-west-2
           deployment_package: aws/deploy.zip
