@@ -61,7 +61,7 @@ jobs:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           application_name: we-broke
-          environment_name: We-broke-env
+          environment_name: We-broke-env-new
           version_label: "docker-app-${{ steps.format-time.outputs.replaced }}"
           region: eu-west-2
           deployment_package: aws/deploy.zip
