@@ -62,7 +62,7 @@ dependencies {
 	implementation 'software.amazon.awssdk:sso'
 	implementation 'software.amazon.awssdk:ssooidc'
 	implementation 'software.amazon.awssdk:s3'
-	implementation 'com.stripe:stripe-java:24.9.0'
+	implementation 'com.stripe:stripe-java:24.15.0'
 //	implementation 'org.apache.kafka:kafka-streams'
 //	implementation 'org.springframework.kafka:spring-kafka'
 //	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
