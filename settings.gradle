@@ -1,4 +1,0 @@
-rootProject.name = 'WeBroke'
-include 'backend'
-include 'frontend'
-
