@@ -1,6 +1,7 @@
-FROM node:18-alpine as build-stage
+FROM node:21.1.0-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
+RUN npm config set legacy-peer-deps true
 RUN npm install
 COPY .. .
 RUN npm run build

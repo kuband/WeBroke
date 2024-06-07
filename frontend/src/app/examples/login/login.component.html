@@ -1,0 +1,63 @@
+<div class="wrapper">
+    <div class="page-header" style="background-image: url('./assets/img/sections/bruno-abatti.jpg');">
+        <div class="filter"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-sm-6 ml-auto mr-auto">
+                    <div class="card card-register">
+                        <h3 class="card-title">Welcome</h3>
+                        <form class="register-form" 
+                            *ngIf="!isLoggedIn"
+                            name="form"
+                            (ngSubmit)="f.form.valid && onSubmit()"
+                            #f="ngForm"
+                            novalidate>
+                                <label>Email</label>
+                                <input type="email" class="form-control no-border" placeholder="Email" 
+                                    type="email"
+                                    class="form-control"
+                                    name="email"
+                                    [(ngModel)]="form.email"
+                                    required
+                                    #email="ngModel"
+                                    [ngClass]="{ 'is-invalid': f.submitted && email.errors }"
+                                />
+                                <div *ngIf="email.errors && f.submitted" class="invalid-feedback">
+                                    <div *ngIf="email.errors['required']">Email is required</div>
+                                  </div>
+                                <label>Password</label>
+                                <input type="password" class="form-control no-border" placeholder="Password"
+                                    type="password"
+                                    class="form-control"
+                                    name="password"
+                                    [(ngModel)]="form.password"
+                                    required
+                                    minlength="6"
+                                    #password="ngModel"
+                                    [ngClass]="{ 'is-invalid': f.submitted && password.errors }"
+                                />
+                                <div *ngIf="password.errors && f.submitted" class="invalid-feedback">
+                                    <div *ngIf="password.errors['required']">Password is required</div>
+                                    <div *ngIf="password.errors['minlength']">
+                                      Password must be at least 6 characters
+                                    </div>
+                                  </div>
+                                <button class="btn btn-danger btn-block btn-round">Login</button>
+                                <div class="form-group">
+                                <div *ngIf="f.submitted && isLoginFailed" class="alert alert-danger" role="alert">
+                                    Login failed: {{ errorMessage }}
+                                </div>
+                                </div>
+                        </form>
+                        <div class="forgot">
+                            <a href="javascript:void(0)" class="btn btn-link btn-danger">Forgot password?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="demo-footer text-center">
+                <h6>&copy; {{data | date: 'yyyy'}}, made with <i class="fa fa-heart heart"></i> by Creative Tim</h6>
+            </div>
+        </div>
+    </div>
+</div>

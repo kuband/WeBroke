@@ -1,0 +1,215 @@
+<div class="wrapper">
+  <div
+    class="page-header"
+    style="background-image: url('./assets/img/sections/soroush-karimi.jpg')"
+  >
+    <div class="filter"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-7 col-12 ml-auto">
+          <div class="info info-horizontal">
+            <div class="icon">
+              <i class="fa fa-umbrella"></i>
+            </div>
+            <div class="description">
+              <h3>We've got you covered</h3>
+              <p>
+                Larger, yet dramatically thinner. More powerful, but remarkably
+                power efficient. Everything you need in a single case.
+              </p>
+            </div>
+          </div>
+          <div class="info info-horizontal">
+            <div class="icon">
+              <i class="fa fa-map-signs"></i>
+            </div>
+            <div class="description">
+              <h3>Clear Directions</h3>
+              <p>
+                Efficiently unleash cross-media information without cross-media
+                value. Quickly maximize timely deliverables for real-time
+                schemas.
+              </p>
+            </div>
+          </div>
+          <div class="info info-horizontal">
+            <div class="icon">
+              <i class="fa fa-user-secret"></i>
+            </div>
+            <div class="description">
+              <h3>We value your privacy</h3>
+              <p>
+                Completely synergize resource taxing relationships via premier
+                niche markets.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-5 col-12 mr-auto">
+          <div class="card card-register">
+            <h3 class="card-title text-center">Register</h3>
+            <div class="social">
+              <button
+                href="javascript:void(0)"
+                class="btn btn-just-icon btn-facebook mr-1"
+              >
+                <i class="fa fa-facebook"></i>
+              </button>
+              <button
+                href="javascript:void(0)"
+                class="btn btn-just-icon btn-google mr-1"
+              >
+                <i class="fa fa-google"></i>
+              </button>
+              <button
+                href="javascript:void(0)"
+                class="btn btn-just-icon btn-twitter mr-1"
+              >
+                <i class="fa fa-twitter"></i>
+              </button>
+            </div>
+
+            <div class="division">
+              <div class="line l"></div>
+              <span>or</span>
+              <div class="line r"></div>
+            </div>
+            <form
+              class="register-form signup"
+              *ngIf="!isLoggedIn"
+              [formGroup]="form"
+              (ngSubmit)="form.valid && onSubmit()"
+              #myForm="ngForm"
+            >
+              <label>Full Name</label>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Full Name"
+                formControlName="fullName"
+                [ngClass]="{
+                  'is-invalid':
+                    form.get('fullName').touched && form.get('fullName').errors
+                }"
+              />
+              <div
+                *ngIf="form.get('fullName').errors && form.get('fullName').touched"
+                class="invalid-feedback d-block"
+              >
+                <div *ngIf="form.get('fullName').errors['required']">
+                  Full Name is required.
+                </div>
+                <div *ngIf="form.get('fullName').errors['minlength']">
+                  Full Name must be at least 2 characters.
+                </div>
+              </div>
+
+              <label>Email</label>
+              <input
+                type="email"
+                class="form-control"
+                placeholder="Email"
+                formControlName="email"
+                [ngClass]="{
+                  'is-invalid':
+                    form.get('email').touched && form.get('email').errors
+                }"
+              />
+              <div
+                *ngIf="form.get('email').errors && form.get('email').touched"
+                class="invalid-feedback d-block"
+              >
+                <div *ngIf="form.get('email').errors['required']">
+                  Email is required.
+                </div>
+                <div *ngIf="form.get('email').errors['email']">
+                  Email is invalid.
+                </div>
+              </div>
+
+              <label>Password</label>
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Password"
+                formControlName="password"
+                [ngClass]="{
+                  'is-invalid':
+                    form.get('password').touched && form.get('password').errors
+                }"
+              />
+              <div
+                *ngIf="
+                  form.get('password').errors && form.get('password').touched
+                "
+                class="invalid-feedback d-block"
+              >
+                <div *ngIf="form.get('password').errors['required']">
+                  Password is required.
+                </div>
+                <div *ngIf="form.get('password').errors['minlength']">
+                  Password must be at least 6 characters.
+                </div>
+              </div>
+
+              <label>Confirm Password</label>
+              <input
+                type="password"
+                class="form-control"
+                placeholder="Confirm Passowrd"
+                formControlName="confirmPassword"
+                [ngClass]="{
+                  'is-invalid':
+                    form.get('confirmPassword').touched &&
+                    form.get('confirmPassword').errors
+                }"
+              />
+              <div
+                *ngIf="
+                  (form.get('confirmPassword').errors || form.errors?.['PasswordNoMatch']) &&
+                  form.get('confirmPassword').touched
+                "
+                class="invalid-feedback d-block"
+              >
+                <div *ngIf="form.get('confirmPassword').errors?.['required']">
+                  Password is required.
+                </div>
+                <div *ngIf="form.get('confirmPassword').errors?.['minlength']">
+                  Password must be at least 6 characters.
+                </div>
+                <div *ngIf="form.errors?.['PasswordNoMatch']">
+                  Passwords don't match.
+                </div>
+              </div>
+
+              <button class="btn btn-block btn-round" [disabled]="!form.valid">
+                Register
+              </button>
+              <div class="form-group">
+                <div
+                  *ngIf="myForm.submitted && isSignupFailed"
+                  class="alert alert-danger"
+                  role="alert"
+                >
+                  Register failed: {{ errorMessage }}
+                </div>
+              </div>
+            </form>
+            <div class="login">
+              <p>
+                Already have an account?
+                <a [routerLink]="['/login']">Log in</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-footer text-center">
+      <h6>
+        &copy; {{ data | date : "yyyy" }}, made with
+        <i class="fa fa-heart heart"></i> by Creative Tim
+      </h6>
+    </div>
+  </div>
+</div>

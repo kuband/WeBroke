@@ -1,116 +1,154 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AppService } from './app.service';
-import { take } from 'rxjs';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import {
+  Component,
+  OnInit,
+  Renderer2,
+  ElementRef,
+  ViewChild,
+  HostListener,
+} from "@angular/core";
+import { Router, NavigationEnd, NavigationStart } from "@angular/router";
+import { Location, PopStateEvent } from "@angular/common";
+import { NavbarComponent } from "./shared/navbar/navbar.component";
+import { catchError, filter, map, Subscription, throwError } from "rxjs";
+import { Store } from "@ngrx/store";
+import { AppState } from "./store/app.states";
+import { LogInSuccess } from "./store/actions/auth.actions";
+import { UserService } from "./services/user.service";
+
+var didScroll;
+var lastScrollTop = 0;
+var delta = 5;
+var navbarHeight = 0;
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
 })
 export class AppComponent implements OnInit {
-  appService = inject(AppService);
+  private _router: Subscription;
+  private lastPoppedUrl: string;
+  private yScrollStack: number[] = [];
+  url: string;
+  @ViewChild(NavbarComponent, { static: false }) navbar: NavbarComponent;
 
-  loginForm!: FormGroup;
-  registrationForm!: FormGroup;
-  isLoggedIn: boolean = false;
-  registrationSuccess: boolean = false;
-  name = '';
-  roles: string[] = [];
-  unsecure!: string;
-  secure!: string;
-  secureAdmin!: string;
-  showRegistration = false;
+  constructor(
+    private renderer: Renderer2,
+    private router: Router,
+    private element: ElementRef,
+    public location: Location,
+    private store: Store<AppState>,
+    private userService: UserService
+  ) {}
 
-  ngOnInit(): void {
-    if (localStorage.getItem('auth-token') !== '') {
-      this.isLoggedIn = true;
-      this.setName();
+  @HostListener("window:scroll", ["$event"])
+  hasScrolled() {
+    var st = window.pageYOffset;
+    // Make sure they scroll more than delta
+    if (Math.abs(lastScrollTop - st) <= delta) return;
+
+    var navbar = document.getElementsByTagName("nav")[0];
+
+    if (navbar != null) {
+      // If they scrolled down and are past the navbar, add class .nav-up.
+      // This is necessary so you never see what is "behind" the navbar.
+      if (st > lastScrollTop && st > navbarHeight) {
+        // Scroll Down
+        if (navbar.classList.contains("nav-down")) {
+          navbar.classList.remove("nav-down");
+          navbar.classList.add("nav-up");
+        }
+        // $('.navbar.nav-down').removeClass('nav-down').addClass('nav-up');
+      } else {
+        // Scroll Up
+        //  $(window).height()
+        if (st + window.innerHeight < document.body.scrollHeight) {
+          // $('.navbar.nav-up').removeClass('nav-up').addClass('nav-down');
+          if (navbar.classList.contains("nav-up")) {
+            navbar.classList.remove("nav-up");
+            navbar.classList.add("nav-down");
+          }
+        }
+      }
     }
-    this.loginForm = new FormGroup({
-      username: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-    });
-
-    this.registrationForm = new FormGroup({
-      username: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required]),
-    });
+    lastScrollTop = st;
   }
 
-  login() {
-    this.appService
-      .login(this.loginForm.value.username, this.loginForm.value.password)
-      .pipe(take(1))
-      .subscribe((response) => {
-        localStorage.setItem(
-          'auth-token',
-          response.headers.get('auth-token') || ''
-        );
-        if (localStorage.getItem('auth-token') !== '') {
-          this.isLoggedIn = true;
-          this.setName();
+  ngOnInit() {
+    var navbar: HTMLElement =
+      this.element.nativeElement.children[0].children[0];
+    if (this.location.path() !== "/sections") {
+      this.location.subscribe((ev: PopStateEvent) => {
+        this.lastPoppedUrl = ev.url;
+      });
+      this.router.events.subscribe((event: any) => {
+        if (event instanceof NavigationStart) {
+          if (event.url != this.lastPoppedUrl)
+            this.yScrollStack.push(window.scrollY);
+        } else if (event instanceof NavigationEnd) {
+          if (event.url == this.lastPoppedUrl) {
+            this.lastPoppedUrl = undefined;
+            window.scrollTo(0, this.yScrollStack.pop());
+          } else window.scrollTo(0, 0);
         }
       });
-  }
+    }
 
-  register() {
-    this.appService
-      .register(
-        this.registrationForm.value.username,
-        this.registrationForm.value.password
-      )
-      .pipe(take(1))
-      .subscribe((response) => {
-        this.registrationSuccess = true;
+    this._router = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        if (this.navbar != null) {
+          this.navbar.sidebarClose();
+        }
+
+        this.renderer.listen("window", "scroll", (event) => {
+          const number = window.scrollY;
+          var _locationSections = this.location.path();
+          _locationSections = _locationSections.split("#")[0];
+          if (_locationSections !== "/sections") {
+            var _locationExamples = this.location.path();
+            _locationExamples = _locationExamples.split("/")[2];
+            if (number > 150 || window.pageYOffset > 150) {
+              // add logic
+              if (navbar != null) {
+                navbar.classList.remove("navbar-transparent");
+              }
+            } else if (
+              _locationExamples !== "addproduct" &&
+              _locationExamples !== "blogposts" &&
+              _locationExamples !== "discover" &&
+              _locationExamples !== "contactus" &&
+              _locationExamples !== "login" &&
+              _locationExamples !== "register" &&
+              _locationExamples !== "search" &&
+              this.location.path() !== "/nucleoicons"
+            ) {
+              // remove logic
+              if (navbar != null) {
+                navbar.classList.add("navbar-transparent");
+              }
+            }
+          }
+        });
       });
+
+    var ua = window.navigator.userAgent;
+    var trident = ua.indexOf("Trident/");
+    if (trident > 0) {
+      // IE 11 => return version number
+      var rv = ua.indexOf("rv:");
+      var version = parseInt(ua.substring(rv + 3, ua.indexOf(".", rv)), 10);
+    }
+    if (version) {
+      var body = document.getElementsByTagName("body")[0];
+      body.classList.add("ie-background");
+    }
+    this.hasScrolled();
   }
 
-  logout() {
-    localStorage.setItem('auth-token', '');
-    this.isLoggedIn = false;
-  }
-
-  fetchUnsecure() {
-    this.appService
-      .fetchUnsecureEndpoint()
-      .pipe(take(1))
-      .subscribe((response) => {
-        this.unsecure = response.msg;
-      });
-  }
-
-  fetchSecure() {
-    this.appService
-      .fetchSecureEndpoint()
-      .pipe(take(1))
-      .subscribe({
-        next: (response) => (this.secure = response.msg),
-        error: (err) => {
-          this.secure = err.statusText;
-        },
-      });
-  }
-
-  fetchSecureAdmin() {
-    this.appService
-      .fetchSecureAdminEndpoint()
-      .pipe(take(1))
-      .subscribe({
-        next: (response) => (this.secureAdmin = response.msg),
-        error: (err) => {
-          this.secureAdmin = err.statusText;
-        },
-      });
-  }
-
-  private setName() {
-    const helper = new JwtHelperService();
-    const decodedToken = helper.decodeToken(
-      localStorage.getItem('auth-token') || ''
-    );
-    this.name = decodedToken?.sub;
-    this.roles = decodedToken['roles'];
+  removeFooter() {
+    var titlee = this.location.prepareExternalUrl(this.location.path());
+    titlee = titlee.slice(1);
+    return !(titlee === "signup" || titlee === "nucleoicons");
   }
 }

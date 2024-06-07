@@ -24,10 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
-import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
+import org.springframework.security.web.csrf.*;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -51,7 +48,7 @@ public class WebSecurityConfig {
             "/actuator/.*",
             "/v3/api-docs/.*",
             "/swagger-ui/.*",
-            "/csrf",
+            "/api/v1/csrf",
             "/api/v1/password-reset",
             "/api/v1/payments/webhook");
 
@@ -106,13 +103,13 @@ public class WebSecurityConfig {
 //                        .expiredUrl("/sessionExpired.html"));
 
         //Stateless spa csrf
-//        http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
-//                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()));
+        http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()));
+//        http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(httpSecuritySessionManagementConfigurer ->
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy
                         (SessionCreationPolicy.STATELESS));
-        http.csrf(AbstractHttpConfigurer::disable);
 
         http.exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
                 httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(unauthorizedHandler)
@@ -127,7 +124,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/csrf").permitAll()
+                        .requestMatchers("/api/v1/csrf").permitAll()
                         .requestMatchers("/api/v1/password-reset").permitAll()
                         .requestMatchers("/api/v1/payments/webhook").permitAll()
                         .anyRequest().authenticated());

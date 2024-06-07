@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "es2017",
+      "dom"
+    ],
+    "outDir": "../out-tsc/spec",
+    "module": "commonjs",
+    "target": "ES2022",
+    "baseUrl": "",
+    "types": [
+      "jasmine",
+      "node"
+    ],
+    "useDefineForClassFields": false
+  },
+  "files": [
+    "test.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "main.ts",
+    "polyfills.ts",
+    "**/*.spec.ts",
+    "**/*.d.ts",
+    "../node_modules/ng2-parallax/commonjs.ts"
+  ]
+}

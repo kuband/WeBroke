@@ -1,7 +1,28 @@
-import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+/*! =========================================================
+ *
+ * Paper Kit 2 PRO Angular - v1.6.0
+ *
+ =========================================================
 
-import {AppModule} from './app/app.module';
+ * Product Page: https://www.creative-tim.com/product/paper-kit-2-pro-angular
+ * Copyright 2020 Creative Tim (https://www.creative-tim.com)
 
+ * Coded by Creative Tim
 
-platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+ =========================================================
+
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+ */
+
+import { enableProdMode } from '@angular/core';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+
+import { AppModule } from './app/app.module';
+import { environment } from './environments/environment';
+
+if (environment.production) {
+  enableProdMode();
+}
+
+platformBrowserDynamic().bootstrapModule(AppModule);

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/csrf")
+@RequestMapping("/api/v1/csrf")
 public class CsrfController {
 
     @GetMapping
