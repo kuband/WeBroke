@@ -5,4 +5,5 @@ export class User {
   token?: string;
   orgIds?: string;
   roles?: string;
+  age?: number;
 }

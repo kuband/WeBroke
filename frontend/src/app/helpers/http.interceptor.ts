@@ -45,11 +45,11 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         switchMap((authState) => {
           return this.authService.refreshCsrf().pipe( 
             switchMap(() => {
-              if (authState?.user?.orgIds) {
+              if (authState?.orgIds) {
                 req = req.clone({
                   headers: req.headers
                     .set("Content-Type", "application/json")
-                    .set("organisation-ids", authState?.user?.orgIds),
+                    .set("organisation-ids", authState?.orgIds),
                     //fetch httponly cookies and append, JWT + csrf
                   withCredentials: true,
                 });

@@ -22,8 +22,11 @@ public class UserDTO {
 //        private String password;
     private Set<RoleDTO> roles;
     private String fullName;
+    private Integer age;
     private boolean enabled;
     private boolean using2FA;
+    private String avatarUrl;
+    private Integer age;
     @KeepSwaggerJson
     @JsonIgnoreProperties(value = {"user"})
     private Set<UserOrganisationSimpleDTO> userOrganisations;
