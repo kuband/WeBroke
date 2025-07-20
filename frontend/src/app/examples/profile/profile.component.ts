@@ -12,6 +12,10 @@ export class ProfileComponent implements OnInit {
     data : Date = new Date();
     userData: any;
 
+    getRoleNames(): string {
+        return this.userData?.roles?.map((r: any) => r.name).join(', ');
+    }
+
     constructor(public userService: UserService) { }
 
     ngOnInit() {
