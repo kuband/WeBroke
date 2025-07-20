@@ -50,6 +50,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                   headers: req.headers
                     .set("Content-Type", "application/json")
                     .set("organisation-ids", authState?.user?.orgIds),
+                    //fetch httponly cookies and append, JWT + csrf
                   withCredentials: true,
                 });
                 return this.handleRequest(req, next);
