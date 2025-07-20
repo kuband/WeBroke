@@ -6,7 +6,6 @@ import { TagInputModule } from 'ngx-chips';
 import { NouisliderModule } from 'ng2-nouislider';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { JwBootstrapSwitchNg2Module } from 'jw-bootstrap-switch-ng2';
-import { AgmCoreModule } from '@agm/core';
 
 import { ImageUploadModule } from '../shared/image-upload/image-upload.module';
 
@@ -24,6 +23,8 @@ import { ProductpageComponent } from './productpage/productpage.component';
 import { ProfileComponent } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
 import { SearchComponent } from './search/search.component';
+import { UserSearchComponent } from './user-search/user-search.component';
+import { UserDetailComponent } from './user-detail/user-detail.component';
 import { SettingsComponent } from './settings/settings.component';
 // import { TwitterComponent } from './twitter/twitter.component';
 import { Page404Component } from './page404/page404.component';
@@ -42,9 +43,6 @@ import { RouterModule } from '@angular/router';
         NouisliderModule,
         JwBootstrapSwitchNg2Module,
         AngularMultiSelectModule,
-        AgmCoreModule.forRoot({
-            apiKey: 'NO_API_KEY'
-        }),
         ImageUploadModule
     ],
     declarations: [
@@ -62,6 +60,8 @@ import { RouterModule } from '@angular/router';
         ProfileComponent,
         RegisterComponent,
         SearchComponent,
+        UserSearchComponent,
+        UserDetailComponent,
         SettingsComponent,
         // TwitterComponent,
         Page404Component,

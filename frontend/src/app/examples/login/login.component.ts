@@ -3,6 +3,7 @@ import { Observable, tap } from "rxjs";
 import { Store, select } from "@ngrx/store";
 import { AppState } from "../../store/app.states";
 import { LogIn } from "../../store/actions/auth.actions";
+import { LoginPayload } from "../../models/login-payload";
 import {
   isLoggedIn,
   selectAuthState,
@@ -21,6 +22,7 @@ export class LoginComponent implements OnInit {
   form: any = {
     email: null,
     password: null,
+    rememberMe: false,
   };
   isLoggedIn = false;
   isLoginFailed = false;
@@ -59,10 +61,11 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const { email, password } = this.form;
-    const payload = {
-      email: email,
-      password: password,
+    const { email, password, rememberMe } = this.form;
+    const payload: LoginPayload = {
+      email,
+      password,
+      rememberMe,
     };
     this.store.dispatch(new LogIn(payload));
   }

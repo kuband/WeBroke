@@ -19,6 +19,8 @@ import { ProductpageComponent } from './examples/productpage/productpage.compone
 import { ProfileComponent } from './examples/profile/profile.component';
 import { RegisterComponent } from './examples/register/register.component';
 import { SearchComponent } from './examples/search/search.component';
+import { UserSearchComponent } from './examples/user-search/user-search.component';
+import { UserDetailComponent } from './examples/user-detail/user-detail.component';
 import { SettingsComponent } from './examples/settings/settings.component';
 // import { TwitterComponent } from './examples/twitter/twitter.component';
 import { Page404Component } from './examples/page404/page404.component';
@@ -45,6 +47,8 @@ const routes: Routes =[
     { path: 'examples/profile',     component: ProfileComponent , canActivate: [() => inject(AuthGuardService).canActivate()]},
     { path: 'examples/register',    component: RegisterComponent },
     { path: 'examples/search',      component: SearchComponent },
+    { path: 'examples/user-search', component: UserSearchComponent },
+    { path: 'examples/user-detail/:id', component: UserDetailComponent },
     { path: 'examples/settings',    component: SettingsComponent },
     // { path: 'examples/twitter',     component: TwitterComponent },
     { path: 'examples/page404',     component: Page404Component },
