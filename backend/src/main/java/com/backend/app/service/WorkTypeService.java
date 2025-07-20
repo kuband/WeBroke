@@ -182,10 +182,18 @@ public class WorkTypeService {
             throw new OperationException("Need to provide Project/Estimate/Org");
         }
         //check if admin of org
-        if (workType.getOrganisation() != null && !userDetailsImpl.getOrganisationIds().contains(workType.getOrganisation().getId())
-                && userOrganisationService.getOnlyUserOrganisations(userDetailsImpl).stream().noneMatch(userOrganisation ->
-                userOrganisation.getOrganisation().getId().equals(workType.getOrganisation().getId()) &&
-                        userOrganisation.getRoles().stream().noneMatch(role -> role.getName() == ERole.ROLE_ADMIN))) {
+        boolean isAdmin = false;
+        if (workType.getOrganisation() != null) {
+            isAdmin = userOrganisationService.getOnlyUserOrganisations(userDetailsImpl)
+                    .stream()
+                    .anyMatch(userOrganisation ->
+                            userOrganisation.getOrganisation().getId().equals(workType.getOrganisation().getId()) &&
+                                    userOrganisation.getRoles().stream().anyMatch(role -> role.getName() == ERole.ROLE_ADMIN));
+        }
+
+        if (workType.getOrganisation() != null &&
+                !userDetailsImpl.getOrganisationIds().contains(workType.getOrganisation().getId()) &&
+                !isAdmin) {
             throw new OperationException("Not admin of the org");
         }
         //check if user belongs to given project

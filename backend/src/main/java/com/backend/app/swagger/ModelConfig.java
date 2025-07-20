@@ -20,7 +20,7 @@ public class ModelConfig {
     private ApplicationContext applicationContext;
 
     @PostConstruct
-    public void dkd() {
+    public void registerModelConverter() {
         GenericApplicationContext gac = (GenericApplicationContext) applicationContext;
         ModelConverterRegistrar modelConverterRegistrar =
                 new ModelConverterRegistrar(Collections.emptyList());
