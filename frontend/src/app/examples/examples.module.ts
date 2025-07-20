@@ -21,7 +21,7 @@ import { EcommerceComponent } from './ecommerce/ecommerce.component';
 import { LandingComponent } from './landing/landing.component';
 import { LoginComponent } from './login/login.component';
 import { ProductpageComponent } from './productpage/productpage.component';
-import { ProfileComponent } from './profile/profile.component';
+import { ProfileComponent, RoleNamesPipe } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
 import { SearchComponent } from './search/search.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -60,6 +60,7 @@ import { RouterModule } from '@angular/router';
         LoginComponent,
         ProductpageComponent,
         ProfileComponent,
+        RoleNamesPipe,
         RegisterComponent,
         SearchComponent,
         SettingsComponent,

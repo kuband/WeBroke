@@ -1,5 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { UserService } from '../../services/user.service';
+
+@Pipe({
+  name: 'roleNames',
+  pure: true
+})
+export class RoleNamesPipe implements PipeTransform {
+  transform(roles: any[] | null | undefined): string {
+    return Array.isArray(roles) ? roles.map(r => r.name).join(', ') : '';
+  }
+}
+
 
 @Component({
   selector: 'app-profile',
@@ -10,6 +21,7 @@ export class ProfileComponent implements OnInit {
     active = 1;
 
     data : Date = new Date();
+    userData: any;
 
     constructor(public userService: UserService) { }
 
@@ -19,7 +31,7 @@ export class ProfileComponent implements OnInit {
         var navbar = document.getElementsByTagName('nav')[0];
         navbar.classList.add('navbar-transparent');
         navbar.classList.add('bg-danger');
-        this.userService.getUserBoard().subscribe(res => console.log(res));
+        this.userService.getUser().subscribe(res => this.userData = res);
 
     }
     ngOnDestroy(){
