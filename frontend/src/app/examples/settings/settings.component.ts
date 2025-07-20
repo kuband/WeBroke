@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/app.states';
+import { LoadUser, UpdateUser } from '../../store/actions/user.actions';
+import { selectCurrentUser } from '../../store/selectors/user.selectors';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -10,13 +15,19 @@ export class SettingsComponent implements OnInit {
     state_info = true;
     state_info1 = true;
     state_info2 = true;
-
     data : Date = new Date();
+    userData: any;
+    settingsForm: FormGroup = new FormGroup({
+        fullName: new FormControl('', [Validators.required, Validators.minLength(2)]),
+        age: new FormControl(null),
+        password: new FormControl('', [Validators.required])
+    });
+
     profilePictureUrl: string | null = null;
     selectedFile: File | null = null;
     readonly MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
 
-    constructor(private userService: UserService) { }
+    constructor(private store: Store<AppState>, private userService: UserService) { }
 
     ngOnInit() {
         var body = document.getElementsByTagName('body')[0];
@@ -24,6 +35,16 @@ export class SettingsComponent implements OnInit {
         var navbar = document.getElementsByTagName('nav')[0];
         navbar.classList.add('navbar-transparent');
         navbar.classList.add('bg-danger');
+        this.store.dispatch(new LoadUser());
+        this.store.select(selectCurrentUser).subscribe(res => {
+            this.userData = res;
+            if (res) {
+                this.settingsForm.patchValue({
+                    fullName: res.fullName,
+                    age: res.age
+                });
+            }
+        });
         this.loadPicture();
     }
     ngOnDestroy(){
@@ -61,5 +82,11 @@ export class SettingsComponent implements OnInit {
         this.userService.getUserPicture().subscribe(blob => {
             this.profilePictureUrl = URL.createObjectURL(blob);
         });
+    }
+
+    onSubmit() {
+        if (this.settingsForm.valid) {
+            this.store.dispatch(new UpdateUser(this.settingsForm.value));
+        }
     }
 }

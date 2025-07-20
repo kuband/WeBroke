@@ -3,24 +3,23 @@ package com.backend.auth.controllers;
 import com.backend.auth.models.dto.UserDTO;
 import com.backend.auth.models.entity.User;
 import com.backend.auth.models.mapper.UserMapper;
+import com.backend.auth.exception.PasswordException;
+import com.backend.auth.payload.request.UpdateProfileRequest;
+import com.backend.auth.security.services.PasswordResetService;
 import com.backend.auth.security.services.UserDetails;
 import com.backend.auth.security.services.UserDetailsImpl;
 import lombok.AllArgsConstructor;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import java.io.IOException;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -30,6 +29,7 @@ import java.util.Optional;
 public class UserController {
     private UserDetails userDetails;
     private UserMapper userMapper;
+    private PasswordResetService passwordResetService;
 
     private static final long MAX_PROFILE_PICTURE_SIZE = 2 * 1024 * 1024; // 2MB
 
@@ -71,5 +71,27 @@ public class UserController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/user")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserDTO> updateCurrentUser(@AuthenticationPrincipal UserDetailsImpl currentUser,
+                                                     @Valid @RequestBody UpdateProfileRequest updateRequest) {
+        Optional<User> optionalUser = userDetails.getUserByID(currentUser.getId());
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        User user = optionalUser.get();
+        if (!passwordResetService.checkIfValidOldPassword(user, updateRequest.getPassword())) {
+            throw new PasswordException("Invalid password");
+        }
+        if (updateRequest.getFullName() != null) {
+            user.setFullName(updateRequest.getFullName());
+        }
+        if (updateRequest.getAge() != null) {
+            user.setAge(updateRequest.getAge());
+        }
+        User saved = userDetails.save(user);
+        return ResponseEntity.ok(userMapper.sourceToDestinationAllFields(saved));
     }
 }
