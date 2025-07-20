@@ -11,6 +11,9 @@ import { selectCurrentUser } from '../../store/selectors/user.selectors';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
+    state_info = true;
+    state_info1 = true;
+    state_info2 = true;
     data : Date = new Date();
     userData: any;
     settingsForm: FormGroup = new FormGroup({
