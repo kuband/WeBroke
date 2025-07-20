@@ -14,5 +14,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
           EntityGraph.EntityGraphType.LOAD)
   Optional<User> findByEmail(String email);
 
+  @Override
+  @EntityGraph(attributePaths = {"roles", "userOrganisations"}, type =
+          EntityGraph.EntityGraphType.LOAD)
+  Optional<User> findById(Long id);
+
   Boolean existsByEmail(String email);
 }
