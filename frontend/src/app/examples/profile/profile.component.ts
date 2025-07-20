@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../services/user.service';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store/app.states';
+import { LoadUser } from '../../store/actions/user.actions';
+import { selectCurrentUser } from '../../store/selectors/user.selectors';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +19,7 @@ export class ProfileComponent implements OnInit {
         return this.userData?.roles?.map((r: any) => r.name).join(', ');
     }
 
-    constructor(public userService: UserService) { }
+    constructor(private store: Store<AppState>) { }
 
     ngOnInit() {
         var body = document.getElementsByTagName('body')[0];
@@ -24,7 +27,10 @@ export class ProfileComponent implements OnInit {
         var navbar = document.getElementsByTagName('nav')[0];
         navbar.classList.add('navbar-transparent');
         navbar.classList.add('bg-danger');
-        this.userService.getUser().subscribe(res => this.userData = res);
+        this.store.dispatch(new LoadUser());
+        this.store.select(selectCurrentUser).subscribe(res => {
+            this.userData = res;
+        });
 
     }
     ngOnDestroy(){
