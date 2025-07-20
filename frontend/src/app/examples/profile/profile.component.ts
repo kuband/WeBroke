@@ -10,6 +10,7 @@ export class ProfileComponent implements OnInit {
     active = 1;
 
     data : Date = new Date();
+    userData: any;
 
     constructor(public userService: UserService) { }
 
@@ -19,7 +20,7 @@ export class ProfileComponent implements OnInit {
         var navbar = document.getElementsByTagName('nav')[0];
         navbar.classList.add('navbar-transparent');
         navbar.classList.add('bg-danger');
-        this.userService.getUserBoard().subscribe(res => console.log(res));
+        this.userService.getUser().subscribe(res => this.userData = res);
 
     }
     ngOnDestroy(){
