@@ -24,7 +24,7 @@ export class AuthEffects {
     ofType(AuthActionTypes.LOGIN),
     map((action: LogIn) => action.payload),
     switchMap(payload => {
-      return this.authService.login(payload.email, payload.password, false).pipe(
+      return this.authService.login(payload.email, payload.password, payload.rememberMe).pipe(
         map((user) => {
           return new LogInSuccess({token: user.token, email: user.email, orgIds: user.orgIds, roles: user.roles});
         }),
