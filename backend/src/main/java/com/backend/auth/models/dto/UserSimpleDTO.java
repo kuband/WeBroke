@@ -17,4 +17,5 @@ public class UserSimpleDTO {
     private String email;
     private Set<RoleDTO> roles;
     private String fullName;
+    private Integer age;
 }

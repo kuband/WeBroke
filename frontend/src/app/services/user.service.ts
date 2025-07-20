@@ -30,4 +30,8 @@ export class UserService {
   getUser(): Observable<any> {
     return this.http.get(USER_API_URL);
   }
+
+  updateUser(data: any): Observable<any> {
+    return this.http.put(USER_API_URL, data);
+  }
 }
