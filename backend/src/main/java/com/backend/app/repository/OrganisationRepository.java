@@ -18,7 +18,7 @@ public interface OrganisationRepository extends JpaRepository<Organisation, Long
     Integer countAllByIdIn(Set<Long> ids);
 
 
-    @Query("select id from Organisation where id not in (?1) and (subscriptionStatus<>'null' or subscriptionStatus<>'CANCELED')")
+    @Query("select o.id from Organisation o where o.id not in (?1) and o.subscriptionStatus is not null and o.subscriptionStatus <> 'CANCELED'")
     List<Long> findAllToCancel(List<Long> id);
 
     @Modifying
