@@ -1,8 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.states';
 import { LoadUser } from '../../store/actions/user.actions';
 import { selectCurrentUser } from '../../store/selectors/user.selectors';
+
+@Pipe({
+  name: 'roleNames',
+  pure: true
+})
+export class RoleNamesPipe implements PipeTransform {
+  transform(roles: any[] | null | undefined): string {
+    return Array.isArray(roles) ? roles.map(r => r.name).join(', ') : '';
+  }
+}
 
 @Component({
   selector: 'app-profile',
@@ -14,10 +24,6 @@ export class ProfileComponent implements OnInit {
 
     data : Date = new Date();
     userData: any;
-
-    getRoleNames(): string {
-        return this.userData?.roles?.map((r: any) => r.name).join(', ');
-    }
 
     constructor(private store: Store<AppState>) { }
 
