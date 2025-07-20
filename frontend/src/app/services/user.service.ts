@@ -30,4 +30,14 @@ export class UserService {
   getUser(): Observable<any> {
     return this.http.get(USER_API_URL);
   }
+
+  getUserPicture(): Observable<Blob> {
+    return this.http.get(`${USER_API_URL}/picture`, { responseType: 'blob' });
+  }
+
+  uploadUserPicture(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${USER_API_URL}/picture`, formData);
+  }
 }

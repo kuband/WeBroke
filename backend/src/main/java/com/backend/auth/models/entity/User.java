@@ -59,6 +59,13 @@ public class User {
 
     private boolean using2FA;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "bytea")
+    private byte[] profilePicture;
+
+    private String profilePictureType;
+
     public User(String email, String password, String fullName,
                 boolean enabled, boolean using2FA) {
         this.email = email;

@@ -5,8 +5,10 @@
     <div class="profile-content section">
         <div class="container">
             <div class="row">
-                <div class="profile-picture">
-                    <app-image-upload [image]="'./assets/img/faces/clem-onojeghuo-2.jpg'"></app-image-upload>
+                <div class="profile-picture text-center">
+                    <img [src]="profilePictureUrl || './assets/img/faces/clem-onojeghuo-2.jpg'" class="img-no-padding" />
+                    <input type="file" (change)="onFileSelected($event)" class="mt-2" />
+                    <button class="btn btn-outline-default btn-file btn-round mt-2" (click)="uploadPicture()" [disabled]="!selectedFile">Upload</button>
                 </div>
             </div>
             <div class="row">

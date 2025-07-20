@@ -11,6 +11,7 @@ export class ProfileComponent implements OnInit {
 
     data : Date = new Date();
     userData: any;
+    profilePictureUrl: string | null = null;
 
     getRoleNames(): string {
         return this.userData?.roles?.map((r: any) => r.name).join(', ');
@@ -25,6 +26,7 @@ export class ProfileComponent implements OnInit {
         navbar.classList.add('navbar-transparent');
         navbar.classList.add('bg-danger');
         this.userService.getUser().subscribe(res => this.userData = res);
+        this.loadPicture();
 
     }
     ngOnDestroy(){
@@ -33,6 +35,15 @@ export class ProfileComponent implements OnInit {
         var navbar = document.getElementsByTagName('nav')[0];
         navbar.classList.remove('navbar-transparent');
         navbar.classList.remove('bg-danger');
+        if(this.profilePictureUrl && this.profilePictureUrl.startsWith('blob:')){
+            URL.revokeObjectURL(this.profilePictureUrl);
+        }
+    }
+
+    loadPicture(){
+        this.userService.getUserPicture().subscribe(blob => {
+            this.profilePictureUrl = URL.createObjectURL(blob);
+        });
     }
 
 }
