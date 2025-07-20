@@ -1,19 +1,18 @@
-import { User } from "../../models/user";
 import { AuthActionTypes, All } from '../actions/auth.actions';
 
 
 export interface State {
   // is a user authenticated?
   isAuthenticated: boolean;
-  // if authenticated, there should be a user object
-  user: User | null;
+  // authenticated user organisation ids
+  orgIds: string | null;
   // error message
   errorMessage: string | null;
 }
 
 export const initialState: State = {
   isAuthenticated: false,
-  user: null,
+  orgIds: null,
   errorMessage: null
 };
 
@@ -23,12 +22,7 @@ export function reducer(state = initialState, action: All): State {
       return {
         ...state,
         isAuthenticated: true,
-        user: {
-          token: action.payload.token,
-          email: action.payload.email,
-          orgIds: action.payload.orgIds,
-          roles: action.payload.roles
-        },
+        orgIds: action.payload.orgIds,
         errorMessage: null
       };
     }
@@ -42,12 +36,7 @@ export function reducer(state = initialState, action: All): State {
       return {
         ...state,
         isAuthenticated: true,
-        user: {
-          token: action.payload.token,
-          email: action.payload.email,
-          orgIds: action.payload.orgIds,
-          roles: action.payload.roles
-        },
+        orgIds: action.payload.orgIds,
         errorMessage: null
       };
     }

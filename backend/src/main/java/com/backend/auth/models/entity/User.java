@@ -55,15 +55,26 @@ public class User {
     @Size(max = 50)
     private String fullName;
 
+    private Integer age;
+
     private boolean enabled;
 
     private boolean using2FA;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(columnDefinition = "bytea")
+    private byte[] profilePicture;
+
+    private String profilePictureType;
+
     public User(String email, String password, String fullName,
+                Integer age,
                 boolean enabled, boolean using2FA) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
+        this.age = age;
         this.enabled = enabled;
         this.using2FA = using2FA;
     }

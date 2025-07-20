@@ -18,7 +18,7 @@ export class UserService {
   getUserBoard(): Observable<any> {
     return this.http.get(API_URL + 'user', { responseType: 'text' });
   }
-  
+
   getModeratorBoard(): Observable<any> {
     return this.http.get(API_URL + 'mod', { responseType: 'text' });
   }
@@ -29,5 +29,19 @@ export class UserService {
 
   getUser(): Observable<any> {
     return this.http.get(USER_API_URL);
+  }
+
+  updateUser(data: any): Observable<any> {
+    return this.http.put(USER_API_URL, data);
+  }
+
+  getUserPicture(): Observable<Blob> {
+    return this.http.get(`${USER_API_URL}/picture`, { responseType: 'blob' });
+  }
+
+  uploadUserPicture(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${USER_API_URL}/picture`, formData);
   }
 }
