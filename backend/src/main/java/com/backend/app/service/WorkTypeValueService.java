@@ -60,8 +60,7 @@ public class WorkTypeValueService {
                 worktypeValueFullMapper.updateWorkTypeValueFromDto(wtv,
                         wtvEntity);
                 setWorkTypes(projectId, estimateId, userDetailsImpl, Collections.singletonList(wtv));
-
-                persistWtv(wtvEntity);
+                savedWtv = persistWtv(wtvEntity);
             }
             return savedWtv;
         }).toList();
