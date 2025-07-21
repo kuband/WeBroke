@@ -1,0 +1,26 @@
+<div class="wrapper">
+  <div class="main">
+    <div class="section section-white section-search">
+      <div class="container text-center">
+        <form (submit)="$event.preventDefault(); search()" class="form-inline search-form">
+          <div class="input-group no-border">
+            <input type="text" class="form-control input-xtreme no-border" [(ngModel)]="query" name="query" placeholder="Search users">
+            <div class="input-group-append">
+              <button class="btn btn-danger" type="button" (click)="search()">Search</button>
+            </div>
+          </div>
+        </form>
+        <div class="row mt-4" *ngIf="results.length">
+          <div class="col-md-3" *ngFor="let u of results">
+            <div class="card" (click)="openUser(u.id)" style="cursor:pointer">
+              <img [src]="u.avatarUrl" class="card-img-top" alt="avatar">
+              <div class="card-body p-2">
+                <h6 class="mb-0">{{u.fullName}}</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

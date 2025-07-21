@@ -19,6 +19,7 @@ import { httpInterceptorProviders } from './helpers/http.interceptor';
 import { EffectsModule } from '@ngrx/effects';
 import { reducers } from './store/app.states';
 import { AuthEffects } from './store/effects/auth.effects';
+import { UserEffects } from './store/effects/user.effects';
 import { AuthGuardService } from './services/auth-guard.service';
 import {StoreModule, META_REDUCERS, MetaReducer} from '@ngrx/store';
 import { storageMetaReducer } from './services/storage-metareducer';
@@ -53,14 +54,14 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
         AppRoutingModule,
         ExamplesModule,
         HttpClientModule,
-        EffectsModule.forRoot([AuthEffects]),
+        EffectsModule.forRoot([AuthEffects, UserEffects]),
         StoreModule.forRoot(reducers, {})
     ],
     providers: [
         ContactFormService,
         AuthGuardService,
         httpInterceptorProviders,
-        {provide: ROOT_STORAGE_KEYS, useValue: ['authState']},
+        {provide: ROOT_STORAGE_KEYS, useValue: ['authState', 'userState']},
         {provide: ROOT_LOCAL_STORAGE_KEY, useValue: 'drivewise.local.keys'},
         {
             provide   : META_REDUCERS,

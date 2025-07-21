@@ -54,17 +54,26 @@ public class User {
     @NotBlank
     @Size(max = 50)
     private String fullName;
+    private String avatarUrl;
+    private Integer age;
 
     private boolean enabled;
 
     private boolean using2FA;
 
-    public User(String email, String password, String fullName,
+    public User(String email, String password, String fullName, String avatarUrl, Integer age,
                 boolean enabled, boolean using2FA) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
+        this.avatarUrl = avatarUrl;
+        this.age = age;
         this.enabled = enabled;
         this.using2FA = using2FA;
+    }
+
+    public User(String email, String password, String fullName,
+                boolean enabled, boolean using2FA) {
+        this(email, password, fullName, null, null, enabled, using2FA);
     }
 }

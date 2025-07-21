@@ -10,7 +10,7 @@ import {
 
 import { AuthService } from "../services/auth.service";
 
-import { Observable, firstValueFrom, throwError } from "rxjs";
+import { Observable, throwError } from "rxjs";
 import { catchError, map, switchMap, take } from "rxjs/operators";
 
 import { EventBusService } from "../shared/eventbus/event-bus.service";
@@ -35,43 +35,43 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     this.getState = this.store.select(selectAuthState);
   }
 
+  private getCookie(name: string): string | null {
+    const match = document.cookie.match(new RegExp("(^|;\\s*)" + name + "=([^;]*)"));
+    return match ? decodeURIComponent(match[2]) : null;
+  }
+
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (!req.url.includes("csrf")) {
-      return this.getState.pipe(
-        take(1),
-        switchMap((authState) => {
-          return this.authService.refreshCsrf().pipe( 
-            switchMap(() => {
-              if (authState?.user?.orgIds) {
-                req = req.clone({
-                  headers: req.headers
-                    .set("Content-Type", "application/json")
-                    .set("organisation-ids", authState?.user?.orgIds),
-                    //fetch httponly cookies and append, JWT + csrf
-                  withCredentials: true,
-                });
-                return this.handleRequest(req, next);
-              } else {
-                req = req.clone({
-                  withCredentials: true,
-                });
-                return this.handleRequest(req, next);
-              }
-            }),
-            catchError(err => {
-              console.error('HTTP ERROR: ', err);
-              return throwError(err);
-            })
-          );
-
-        })
-      );
-    } else {
-      return this.handleRequest(req, next)
+    if (req.url.includes("csrf")) {
+      return this.handleRequest(req, next);
     }
+
+    return this.getState.pipe(
+      take(1),
+      switchMap((authState) => {
+        let headers = req.headers;
+        const token = this.getCookie("XSRF-TOKEN");
+        if (token) {
+          headers = headers.set("X-XSRF-TOKEN", token);
+        }
+        if (authState?.orgIds) {
+          headers = headers
+            .set("Content-Type", "application/json")
+            .set("organisation-ids", authState.orgIds);
+        }
+        const request = req.clone({
+          headers,
+          withCredentials: true,
+        });
+        return this.handleRequest(request, next);
+      }),
+      catchError((err) => {
+        console.error("HTTP ERROR: ", err);
+        return throwError(err);
+      })
+    );
   }
 
   private handleRequest(
