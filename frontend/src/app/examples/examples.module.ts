@@ -6,7 +6,6 @@ import { TagInputModule } from 'ngx-chips';
 import { NouisliderModule } from 'ng2-nouislider';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { JwBootstrapSwitchNg2Module } from 'jw-bootstrap-switch-ng2';
-import { AgmCoreModule } from '@agm/core';
 
 import { ImageUploadModule } from '../shared/image-upload/image-upload.module';
 
@@ -21,7 +20,7 @@ import { EcommerceComponent } from './ecommerce/ecommerce.component';
 import { LandingComponent } from './landing/landing.component';
 import { LoginComponent } from './login/login.component';
 import { ProductpageComponent } from './productpage/productpage.component';
-import { ProfileComponent } from './profile/profile.component';
+import { ProfileComponent, RoleNamesPipe } from './profile/profile.component';
 import { RegisterComponent } from './register/register.component';
 import { SearchComponent } from './search/search.component';
 import { SettingsComponent } from './settings/settings.component';
@@ -42,9 +41,6 @@ import { RouterModule } from '@angular/router';
         NouisliderModule,
         JwBootstrapSwitchNg2Module,
         AngularMultiSelectModule,
-        AgmCoreModule.forRoot({
-            apiKey: 'NO_API_KEY'
-        }),
         ImageUploadModule
     ],
     declarations: [
@@ -60,6 +56,7 @@ import { RouterModule } from '@angular/router';
         LoginComponent,
         ProductpageComponent,
         ProfileComponent,
+        RoleNamesPipe,
         RegisterComponent,
         SearchComponent,
         SettingsComponent,

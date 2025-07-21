@@ -5,6 +5,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public interface OrganisationRepository extends JpaRepository<Organisation, Long
     Integer countAllByIdIn(Set<Long> ids);
 
 
-    @Query("select id from Organisation where id not in (?1) and (subscriptionStatus<>'null' or subscriptionStatus<>'CANCELED')")
-    List<Long> findAllToCancel(List<Long> id);
+    @Query("select o.id from Organisation o where o.id not in :ids and o.subscriptionStatus is not null and o.subscriptionStatus <> 'CANCELED'")
+    List<Long> findAllToCancel(@Param("ids") List<Long> ids);
 
     @Modifying
     @Query("update Organisation set modificationStatus='DELETED' where id in (?1)")

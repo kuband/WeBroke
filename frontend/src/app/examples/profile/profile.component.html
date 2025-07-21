@@ -8,10 +8,10 @@
                 <div class="profile-picture">
                     <div class="fileinput fileinput-new" data-provides="fileinput">
                         <div class="fileinput-new img-no-padding">
-                            <img src="./assets/img/faces/joe-gardner-2.jpg" alt="...">
+                            <img [src]="profilePictureUrl || './assets/img/faces/joe-gardner-2.jpg'" alt="...">
                         </div>
                         <div class="name">
-                            <h4 class="title text-center">{{ userData?.fullName }}<br /><small>{{ getRoleNames() }}</small></h4>
+                            <h4 class="title text-center">{{ userData?.fullName }}<br /><small>{{ userData?.roles | roleNames }}</small></h4>
                         </div>
                     </div>
                 </div>
@@ -20,7 +20,8 @@
                 <div class="col-md-6 ml-auto mr-auto text-center">
                     <p>An artist of considerable range, Chet Faker — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music, giving it a warm, intimate feel with a solid groove structure. </p>
                     <br />
-                    <button class="btn btn-outline-default btn-round"><i class="fa fa-cog"></i> Settings</button>
+                    <button class="btn btn-outline-default btn-round" [routerLink]="['/examples/settings']"><i class="fa fa-cog"></i> Settings</button>
+
                     <pre>{{ userData | json }}</pre>
                 </div>
             </div>
