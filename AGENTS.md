@@ -70,7 +70,7 @@ npm run build
 
 as well as
 ```bash
-grade build
+gradle build
 ```
 
 All checks must pass before OpenAI Codex generated code can be merged. Agents.md helps ensure OpenAI Codex follows these requirements
