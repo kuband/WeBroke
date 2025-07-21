@@ -50,8 +50,8 @@ Frontend - Angular
 
 When OpenAI Codex helps create a PR, please ensure it:
 
-1. Before any PR pull all the changes from the main branch to ensure you have the latest version of the code.
-2. Merge any changes from the main branch into your current branch and resolve any conflicts 
+1. Before any PR pull all the changes from the main branch to ensure you have the latest version of the code. "git pull origin main"
+2. Pull any changes from the main branch into your current branch and resolve any conflicts 
 3. If you're missing the origin, its git@github.com:kuband/WeBroke.git 
 4. Includes a clear description of the changes as guided by Agents.md 
 5. References any related issues that OpenAI Codex is addressing 
