@@ -30,7 +30,6 @@ public class UserController {
     private UserDetails userDetails;
     private UserMapper userMapper;
     private PasswordResetService passwordResetService;
-
     private static final long MAX_PROFILE_PICTURE_SIZE = 2 * 1024 * 1024; // 2MB
 
     @GetMapping("/user")

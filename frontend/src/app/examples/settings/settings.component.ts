@@ -26,7 +26,6 @@ export class SettingsComponent implements OnInit {
     profilePictureUrl: string | null = null;
     selectedFile: File | null = null;
     readonly MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
-
     constructor(private store: Store<AppState>, private userService: UserService) { }
 
     ngOnInit() {
