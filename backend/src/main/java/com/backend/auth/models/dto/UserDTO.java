@@ -26,7 +26,6 @@ public class UserDTO {
     private boolean enabled;
     private boolean using2FA;
     private String avatarUrl;
-    private Integer age;
     @KeepSwaggerJson
     @JsonIgnoreProperties(value = {"user"})
     private Set<UserOrganisationSimpleDTO> userOrganisations;
