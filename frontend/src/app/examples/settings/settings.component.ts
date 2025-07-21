@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.states';
@@ -11,7 +11,7 @@ import { UserService } from '../../services/user.service';
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
     state_info = true;
     state_info1 = true;
     state_info2 = true;

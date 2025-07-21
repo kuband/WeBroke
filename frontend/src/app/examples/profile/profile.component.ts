@@ -1,4 +1,4 @@
-import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
+import { Component, OnInit, OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store/app.states';
 import { LoadUser } from '../../store/actions/user.actions';
@@ -20,7 +20,7 @@ export class RoleNamesPipe implements PipeTransform {
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent implements OnInit, OnDestroy {
     active = 1;
 
     data : Date = new Date();
