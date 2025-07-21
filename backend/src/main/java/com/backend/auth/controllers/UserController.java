@@ -71,7 +71,6 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
-
     @PutMapping("/user")
     @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UserDTO> updateCurrentUser(@AuthenticationPrincipal UserDetailsImpl currentUser,
