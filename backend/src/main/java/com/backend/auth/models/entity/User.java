@@ -54,9 +54,7 @@ public class User {
     @NotBlank
     @Size(max = 50)
     private String fullName;
-
     private String avatarUrl;
-
     private Integer age;
 
     private boolean enabled;

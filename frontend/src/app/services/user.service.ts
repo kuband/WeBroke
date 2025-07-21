@@ -35,7 +35,6 @@ export class UserService {
   updateUser(data: any): Observable<any> {
     return this.http.put(USER_API_URL, data);
   }
-
   searchUsers(name: string): Observable<any> {
     return this.http.get(`${USERS_API_URL}/search`, { params: { name } });
   }
