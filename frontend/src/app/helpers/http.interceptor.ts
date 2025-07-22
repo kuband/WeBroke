@@ -51,21 +51,29 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     return this.getState.pipe(
       take(1),
       switchMap((authState) => {
-        let headers = req.headers;
-        const token = this.getCookie("XSRF-TOKEN");
-        if (token) {
-          headers = headers.set("X-XSRF-TOKEN", token);
-        }
-        if (authState?.orgIds) {
-          headers = headers
-            .set("Content-Type", "application/json")
-            .set("organisation-ids", authState.orgIds);
-        }
-        const request = req.clone({
-          headers,
-          withCredentials: true,
-        });
-        return this.handleRequest(request, next);
+          return this.authService.refreshCsrf().pipe(
+              switchMap(() => {
+                let headers = req.headers;
+                const token = this.getCookie("XSRF-TOKEN");
+                if (token) {
+                  headers = headers.set("X-XSRF-TOKEN", token);
+                }
+                if (authState?.orgIds) {
+                  headers = headers
+                    .set("Content-Type", "application/json")
+                    .set("organisation-ids", authState.orgIds);
+                }
+                const request = req.clone({
+                  headers,
+                  withCredentials: true,
+                })
+                return this.handleRequest(request, next);
+                }),
+              catchError((err) => {
+                console.error("HTTP ERROR: ", err);
+                return throwError(err);
+              })
+          );
       }),
       catchError((err) => {
         console.error("HTTP ERROR: ", err);
