@@ -105,7 +105,9 @@ public class WebSecurityConfig {
         //Stateless spa csrf
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()));
+                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+                        .requireCsrfProtectionMatcher(request -> !request.getRequestURI().contains("/api/v1/auth/signin") &&
+                                !request.getRequestURI().contains("/api/v1/csrf")));
 //        http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(httpSecuritySessionManagementConfigurer ->
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy
