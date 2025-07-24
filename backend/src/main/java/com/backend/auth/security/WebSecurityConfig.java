@@ -25,6 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.*;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
@@ -106,8 +107,8 @@ public class WebSecurityConfig {
         http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
-                        .requireCsrfProtectionMatcher(request -> !request.getRequestURI().contains("/api/v1/auth/signin") &&
-                                !request.getRequestURI().contains("/api/v1/csrf")));
+                        .ignoringRequestMatchers(new AntPathRequestMatcher("/api/v1/auth/signin"),
+                                new AntPathRequestMatcher("/api/v1/csrf")));
 //        http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(httpSecuritySessionManagementConfigurer ->
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy
