@@ -24,7 +24,12 @@ import { Router } from "@angular/router";
 @Injectable()
 export class HttpRequestInterceptor implements HttpInterceptor {
   private isRefreshing = false;
+  private isRefreshingCsrf = false;
   getState: Observable<any>;
+
+  private isStateChanging(method: string): boolean {
+    return ["POST", "PUT", "PATCH", "DELETE"].includes(method);
+  }
 
   constructor(
     private authService: AuthService,
@@ -44,6 +49,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    const stateChanging = this.isStateChanging(req.method);
     if (req.url.includes("csrf")) {
       return this.handleRequest(req, next);
     }
@@ -51,29 +57,23 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     return this.getState.pipe(
       take(1),
       switchMap((authState) => {
-          return this.authService.refreshCsrf().pipe(
-              switchMap(() => {
-                let headers = req.headers;
-                const token = this.getCookie("XSRF-TOKEN");
-                if (token) {
-                  headers = headers.set("X-XSRF-TOKEN", token);
-                }
-                if (authState?.orgIds) {
-                  headers = headers
-                    .set("Content-Type", "application/json")
-                    .set("organisation-ids", authState.orgIds);
-                }
-                const request = req.clone({
-                  headers,
-                  withCredentials: true
-                })
-                return this.handleRequest(request, next);
-                }),
-              catchError((err) => {
-                console.error("HTTP ERROR: ", err);
-                return throwError(err);
-              })
-          );
+        let headers = req.headers;
+        if (stateChanging) {
+          const token = this.getCookie("XSRF-TOKEN");
+          if (token) {
+            headers = headers.set("X-XSRF-TOKEN", token);
+          }
+        }
+        if (authState?.orgIds) {
+          headers = headers
+            .set("Content-Type", "application/json")
+            .set("organisation-ids", authState.orgIds);
+        }
+        const request = req.clone({
+          headers,
+          withCredentials: true,
+        });
+        return this.handleRequest(request, next);
       }),
       catchError((err) => {
         console.error("HTTP ERROR: ", err);
@@ -88,6 +88,35 @@ export class HttpRequestInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((error) => {
+        const stateChanging = this.isStateChanging(req.method);
+        if (
+          error instanceof HttpErrorResponse &&
+          error.status === 403 &&
+          !req.url.includes("csrf") &&
+          stateChanging &&
+          !this.isRefreshingCsrf
+        ) {
+          this.isRefreshingCsrf = true;
+          return this.authService.refreshCsrf().pipe(
+            switchMap(() => {
+              this.isRefreshingCsrf = false;
+              let headers = req.headers;
+              if (stateChanging) {
+                const token = this.getCookie("XSRF-TOKEN");
+                if (token) {
+                  headers = headers.set("X-XSRF-TOKEN", token);
+                }
+              }
+              const retryReq = req.clone({ headers, withCredentials: true });
+              return next.handle(retryReq);
+            }),
+            catchError((err) => {
+              this.isRefreshingCsrf = false;
+              return throwError(() => err);
+            })
+          );
+        }
+
         if (
           error instanceof HttpErrorResponse &&
           !req.url.includes("auth/signin") &&
